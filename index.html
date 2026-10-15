@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escala de trabalho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111;--mute:#667078;--line:#dedede;--cy:#52d3e6;--cyd:#0e7c90;--red:#f03a3a;--bg:#f2f5f6;--soft:#cfd6da}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;font:14px/1.35 "Open Sans",system-ui,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+main{max-width:1500px;margin:0 auto;padding:16px}
+button{font:inherit;cursor:pointer;border:1px solid var(--soft);background:#fff;color:var(--ink);border-radius:6px;padding:7px 12px}
+button:hover{border-color:var(--cyd)}
+button.pri{background:var(--cyd);border-color:var(--cyd);color:#fff;font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7cc4dc;outline-offset:1px}
+.tools{background:#fff;border:1px solid var(--soft);border-radius:10px;padding:12px 14px;margin-bottom:12px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.row .sp{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.lbl{font-weight:600}
+.cur{font-weight:600;min-width:150px;text-align:center;text-transform:capitalize}
+input[type=text]{font:inherit;padding:7px 10px;border:1px solid var(--soft);border-radius:6px}
+#nome{width:190px}#refd{width:150px}
+.chips,.modes{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{display:inline-flex;border:1px solid var(--soft);border-radius:999px;overflow:hidden;background:#fff}
+.chip button{border:0;border-radius:0;padding:6px 12px}
+.chip .cx{padding:6px 10px;color:var(--mute);border-left:1px solid var(--line)}
+.chip .cx:hover{color:var(--red)}
+.chip button[aria-pressed=true],.modes button[aria-pressed=true]{background:var(--cyd);color:#fff;font-weight:600;border-color:var(--cyd)}
+.chip b{font-weight:400;opacity:.75;margin-left:6px}
+.hint{color:var(--mute);font-size:13px;margin:0}
+.sheet{background:#fff;border:1px solid var(--soft);padding:20px 22px 26px}
+h1{margin:8px 0 26px;text-align:center;font:300 clamp(28px,6vw,62px)/1.1 Outfit,sans-serif;letter-spacing:.28em;padding-left:.28em;color:var(--cy);text-transform:uppercase;display:flex;justify-content:center;flex-wrap:wrap;gap:0 .45em}
+h1 input{font:inherit;letter-spacing:inherit;color:inherit;text-transform:inherit;border:0;background:none;padding:0;text-align:left;min-width:2ch}
+h1 input::placeholder{color:#b7ecf4}
+.scroll{overflow-x:auto}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(104px,1fr));min-width:730px;border-top:1px solid var(--line);border-left:1px solid var(--line);user-select:none;-webkit-user-select:none}
+.dow{font:400 13px/1 Outfit,sans-serif;text-align:center;padding:20px 4px;text-transform:uppercase;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cell{position:relative;min-height:130px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px 6px 10px;cursor:pointer}
+.cell.off{cursor:default}
+.cell:not(.off):hover{background:#f4fcfd}
+.dn{position:absolute;top:8px;left:9px;font-size:12px}
+.ed{position:absolute;top:3px;right:3px;border:0;background:none;color:var(--mute);padding:2px 6px;font-size:14px;opacity:.55}
+.ed:hover{opacity:1;color:var(--cyd)}
+.ppl{margin-top:22px;text-align:center;font-size:17px;line-height:1.3;text-transform:uppercase}
+.ppl i{display:block;font-style:normal;text-transform:none;font-size:13px;line-height:1.25}
+.ppl .of{font-size:15px;color:var(--red)}
+.ppl.hol{color:var(--red)}
+.fer{display:inline-block;background:var(--red);color:#fff;font-size:12px;font-weight:600;letter-spacing:.08em;line-height:1;padding:5px 12px;border-radius:999px;margin-bottom:5px}
+.cell.hol{background:#fdeeee}
+.cell.hol:not(.off):hover{background:#fbe0e0}
+.cell.hol .dn{color:var(--red);font-weight:700}
+dialog{border:0;border-radius:12px;padding:20px;width:min(580px,94vw);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(20,30,35,.45)}
+dialog h2{margin:0 0 14px;font:500 20px Outfit,sans-serif}
+.dr{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin-bottom:10px}
+.dr label{display:flex;gap:8px;align-items:center;min-width:120px;font-weight:600}
+.dr select,.dr input[type=text]{font:inherit;padding:6px 8px;border:1px solid var(--soft);border-radius:6px;min-width:0}
+.dr input[type=text]{flex:1;min-width:120px}
+.act{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+@media (max-width:700px){.cell{min-height:100px}.ppl{font-size:13px}.ppl i{font-size:11px}}
+</style>
+</head>
+<body>
+<main>
+ <section class="tools">
+  <div class="row">
+   <button id="prev" aria-label="Mês anterior">‹</button>
+   <span class="cur" id="cur"></span>
+   <button id="next" aria-label="Próximo mês">›</button>
+   <button id="hoje">Hoje</button>
+   <div class="sp">
+    <button id="limpar">Limpar mês</button>
+    <button id="share" hidden>Compartilhar</button>
+    <button id="png" class="pri">Baixar imagem</button>
+   </div>
+  </div>
+  <div class="row">
+   <input type="text" id="nome" placeholder="Nome do funcionário" aria-label="Nome do funcionário">
+   <button id="addBtn" class="pri">Adicionar</button>
+   <div class="chips" id="chips" role="group" aria-label="Funcionário a marcar"></div>
+  </div>
+  <div class="row">
+   <span class="lbl">Marcar como:</span>
+   <div class="modes" id="modes" role="group" aria-label="Tipo de marcação">
+    <button data-m="t" aria-pressed="true">Trabalha</button>
+    <button data-m="f" aria-pressed="false">Folga</button>
+    <button data-m="b" aria-pressed="false">Folga banco de horas</button>
+    <button data-m="r" aria-pressed="false">Folga referente a</button>
+    <input type="text" id="refd" placeholder="data, ex.: 30/09" maxlength="12" aria-label="Data da folga referente">
+   </div>
+  </div>
+  <p class="hint" id="hint"></p>
+ </section>
+
+ <div class="sheet">
+  <h1><span id="mes"></span><input type="text" id="setor" placeholder="setor" aria-label="Nome do setor"></h1>
+  <div class="scroll"><div class="grid" id="grid"></div></div>
+ </div>
+</main>
+
+<dialog id="dlg"></dialog>
+
+<script>
+const KEY='escala-v3';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S={emps:[],data:{},meta:{}};
+try{
+ const r=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(r&&r.emps)S=Object.assign(S,r);
+ else{const o=JSON.parse(localStorage.getItem('escala-v2')||'null');if(o&&o.emps)S.emps=o.emps.map(e=>({id:e.id,name:e.name}))}
+}catch(e){}
+S.meta=S.meta||{};
+Object.values(S.data).forEach(m=>Object.values(m).forEach(o=>{o.p=o.p||{};
+ for(const id in o.p){const p=o.p[id];if(!p.k){p.k=p.note?'o':'t';p.v=p.note||'';delete p.note}}}));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+const now=new Date();
+let Y=now.getFullYear(),Mo=now.getMonth()+1,brush=S.emps[0]&&S.emps[0].id,mode='t',painting=false,val;
+const ym=()=>Y+'-'+String(Mo).padStart(2,'0');
+const DOW=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const mname=m=>new Date(Y,m-1,1).toLocaleDateString('pt-BR',{month:'long'});
+const dayObj=d=>{const mo=S.data[ym()]||(S.data[ym()]={});return mo[d]||(mo[d]={p:{}})};
+const lab=p=>p.k==='f'?'folga':p.k==='b'?'folga banco de horas':p.k==='r'?'folga ref'+(p.v?' '+p.v:''):p.k==='o'?p.v:'';
+const isOff=p=>'fbr'.includes(p.k);
+const works=p=>p.k==='t'||p.k==='o';
+
+function sizeSetor(){const i=$('#setor'),n=Math.max(i.value.length,5);i.style.width=`calc(${n} * (1.05ch + .28em))`}
+
+function render(){
+ if(!S.emps.find(e=>e.id===brush))brush=S.emps[0]&&S.emps[0].id;
+ const n=new Date(Y,Mo,0).getDate(),first=new Date(Y,Mo-1,1).getDay();
+ const mo=S.data[ym()]||{};
+ $('#mes').textContent=mname(Mo);
+ $('#cur').textContent=mname(Mo)+' de '+Y;
+ const cnt=id=>Object.values(mo).filter(o=>o.p&&o.p[id]&&works(o.p[id])).length;
+ $('#chips').innerHTML=S.emps.map(e=>`<span class="chip"><button data-b="${e.id}" aria-pressed="${e.id===brush}" title="Duplo clique para renomear">${esc(e.name)}<b>${cnt(e.id)}</b></button><button class="cx" data-del="${e.id}" aria-label="Remover ${esc(e.name)}">×</button></span>`).join('');
+ $('#hint').textContent=S.emps.length
+  ?'Escolha o funcionário e o tipo de marcação, depois clique nos dias (arraste para marcar vários). Clicar de novo na mesma marcação remove. Use ✎ no dia para feriado ou ajustes. O número no nome é o total de dias trabalhados.'
+  :'Adicione os funcionários para começar a montar a escala.';
+ let h=DOW.map(d=>`<div class="dow">${d}</div>`).join('');
+ for(let i=0;i<first;i++)h+='<div class="cell off"></div>';
+ for(let d=1;d<=n;d++){
+  const o=mo[d]||{p:{}};
+  const ps=S.emps.filter(e=>o.p&&o.p[e.id]);
+  h+=`<div class="cell ${o.h?'hol':''}" data-d="${d}"><span class="dn">${d}</span><button class="ed" data-ed="${d}" aria-label="Editar dia ${d}">✎</button><div class="ppl ${o.h?'hol':''}">${o.h?'<div class="fer">Feriado</div>':''}${ps.map(e=>{const p=o.p[e.id],l=lab(p);return `<div class="${isOff(p.k)?'of':''}">${esc(e.name)}${l?`<i>(${esc(l)})</i>`:''}</div>`}).join('')}</div></div>`;
+ }
+ const tail=(7-((first+n)%7))%7;
+ for(let i=0;i<tail;i++)h+='<div class="cell off"></div>';
+ $('#grid').innerHTML=h;
+}
+
+function setMode(m){mode=m;document.querySelectorAll('#modes button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m))}
+$('#modes').addEventListener('click',ev=>{const b=ev.target.closest('[data-m]');if(!b)return;setMode(b.dataset.m);if(b.dataset.m==='r'&&!$('#refd').value.trim())$('#refd').focus()});
+$('#refd').addEventListener('focus',()=>setMode('r'));
+
+function toggle(d){
+ if(!brush)return;
+ const o=dayObj(d),cur=o.p[brush],v=mode==='r'?$('#refd').value.trim():'';
+ if(val===undefined)val=(cur&&cur.k===mode&&(cur.v||'')===v)?null:{k:mode,v};
+ if(val)o.p[brush]={k:val.k,v:val.v};else delete o.p[brush];
+ save();render();
+}
+const grid=$('#grid');
+grid.addEventListener('mousedown',ev=>{
+ if(ev.target.closest('.ed'))return;
+ const c=ev.target.closest('.cell[data-d]');if(!c)return;
+ ev.preventDefault();
+ if(mode==='r'&&!$('#refd').value.trim()){$('#refd').focus();return}
+ painting=true;val=undefined;toggle(+c.dataset.d);
+});
+grid.addEventListener('mouseover',ev=>{
+ if(!painting)return;const c=ev.target.closest('.cell[data-d]');if(c)toggle(+c.dataset.d);
+});
+addEventListener('mouseup',()=>{painting=false;val=undefined});
+grid.addEventListener('click',ev=>{const b=ev.target.closest('[data-ed]');if(b)openDay(+b.dataset.ed)});
+
+$('#chips').addEventListener('click',ev=>{
+ const del=ev.target.closest('[data-del]');
+ if(del){const e=S.emps.find(x=>x.id===del.dataset.del);
+  if(confirm(`Remover ${e.name} de todas as escalas?`)){
+   S.emps=S.emps.filter(x=>x!==e);
+   Object.values(S.data).forEach(m=>Object.values(m).forEach(o=>{if(o.p)delete o.p[e.id]}));
+   save();render()}
+  return}
+ const b=ev.target.closest('[data-b]');if(b){brush=b.dataset.b;render()}
+});
+$('#chips').addEventListener('dblclick',ev=>{
+ const b=ev.target.closest('[data-b]');if(!b)return;
+ const e=S.emps.find(x=>x.id===b.dataset.b),nn=prompt('Novo nome:',e.name);
+ if(nn&&nn.trim()){e.name=nn.trim();save();render()}
+});
+
+function openDay(d){
+ const o=dayObj(d),dlg=$('#dlg'),dt=new Date(Y,Mo-1,d);
+ const opts=(k)=>[['t','Trabalha'],['f','Folga'],['b','Folga banco de horas'],['r','Folga referente a'],['o','Outra observação']].map(([v,t])=>`<option value="${v}" ${k===v?'selected':''}>${t}</option>`).join('');
+ dlg.innerHTML=`<h2>${DOW[dt.getDay()]}, ${d} de ${mname(Mo)}</h2>
+ <div class="dr"><label><input type="checkbox" id="dh" ${o.h?'checked':''}> Feriado</label></div>
+ ${S.emps.map(e=>{const p=o.p[e.id]||{k:'t',v:''};return `<div class="dr"><label><input type="checkbox" data-e="${e.id}" ${o.p[e.id]?'checked':''}> ${esc(e.name)}</label>
+ <select data-k="${e.id}" aria-label="Tipo para ${esc(e.name)}">${opts(p.k)}</select>
+ <input type="text" data-v="${e.id}" value="${esc(p.v||'')}" aria-label="Detalhe para ${esc(e.name)}"></div>`}).join('')}
+ <div class="act"><button id="cn">Cancelar</button><button id="ok" class="pri">Salvar</button></div>`;
+ const sync=id=>{
+  const k=dlg.querySelector(`[data-k="${id}"]`).value,i=dlg.querySelector(`[data-v="${id}"]`);
+  i.hidden=!(k==='r'||k==='o');i.placeholder=k==='r'?'data, ex.: 30/09':'observação';
+ };
+ S.emps.forEach(e=>{
+  sync(e.id);
+  dlg.querySelector(`[data-k="${e.id}"]`).addEventListener('change',()=>{sync(e.id);dlg.querySelector(`[data-e="${e.id}"]`).checked=true});
+ });
+ $('#cn').onclick=()=>dlg.close();
+ $('#ok').onclick=()=>{
+  o.h=$('#dh').checked;o.p={};
+  S.emps.forEach(e=>{
+   if(!dlg.querySelector(`[data-e="${e.id}"]`).checked)return;
+   let k=dlg.querySelector(`[data-k="${e.id}"]`).value,v=dlg.querySelector(`[data-v="${e.id}"]`).value.trim();
+   if(k!=='r'&&k!=='o')v='';
+   if(k==='o'&&!v)k='t';
+   o.p[e.id]={k,v};
+  });
+  save();dlg.close();render();
+ };
+ dlg.showModal();
+}
+
+function addEmp(){
+ const i=$('#nome'),v=i.value.trim();if(!v)return;
+ const e={id:'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:v};
+ S.emps.push(e);if(!brush)brush=e.id;
+ i.value='';save();render();i.focus();
+}
+$('#addBtn').onclick=addEmp;
+$('#nome').addEventListener('keydown',e=>{if(e.key==='Enter')addEmp()});
+
+$('#setor').value=S.meta.setor||'';sizeSetor();
+$('#setor').addEventListener('input',e=>{S.meta.setor=e.target.value;sizeSetor();save()});
+
+const go=k=>{Mo+=k;if(Mo<1){Mo=12;Y--}if(Mo>12){Mo=1;Y++}render()};
+$('#prev').onclick=()=>go(-1);$('#next').onclick=()=>go(1);
+$('#hoje').onclick=()=>{Y=now.getFullYear();Mo=now.getMonth()+1;render()};
+$('#limpar').onclick=()=>{if(confirm('Apagar toda a escala deste mês?')){S.data[ym()]={};save();render()}};
+
+/* ---------- Imagem (PNG) ---------- */
+async function makeCanvas(){
+ await Promise.all([document.fonts.load('300 80px Outfit'),document.fonts.load('400 22px Outfit'),document.fonts.load('400 28px "Open Sans"')]).catch(()=>{});
+ const n=new Date(Y,Mo,0).getDate(),first=new Date(Y,Mo-1,1).getDay(),mo=S.data[ym()]||{};
+ const rows=Math.ceil((first+n)/7);
+ const W=2000,M=88,TH=190,HH=62,CH=182,H=TH+HH+rows*CH+70,cw=(W-2*M)/7;
+ const INK='#111',RED='#f03a3a';
+ const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+ const c=cv.getContext('2d');
+ c.fillStyle='#fff';c.fillRect(0,0,W,H);
+ const OS='"Open Sans",Arial,sans-serif';
+
+ const title=(mname(Mo)+' '+(S.meta.setor||'')).trim().toUpperCase();
+ let fs=84;
+ const adv=(ch,f)=>{c.font=`300 ${f}px Outfit,sans-serif`;return c.measureText(ch).width+f*.3+(ch===' '?f*.3:0)};
+ const tw=f=>[...title].reduce((a,ch)=>a+adv(ch,f),0)-f*.3;
+ while(tw(fs)>W-2*M&&fs>30)fs-=4;
+ let x=(W-tw(fs))/2;
+ c.fillStyle='#52d3e6';c.textAlign='left';c.textBaseline='alphabetic';
+ for(const ch of title){c.font=`300 ${fs}px Outfit,sans-serif`;c.fillText(ch,x,140);x+=adv(ch,fs)}
+
+ c.strokeStyle='#dedede';c.lineWidth=2;c.beginPath();
+ for(let i=0;i<=7;i++){const xx=M+i*cw;c.moveTo(xx,TH);c.lineTo(xx,TH+HH+rows*CH)}
+ for(let r=0;r<=rows+1;r++){const yy=r===0?TH:TH+HH+(r-1)*CH;c.moveTo(M,yy);c.lineTo(M+7*cw,yy)}
+ c.stroke();
+
+ c.fillStyle=INK;c.textAlign='center';c.textBaseline='middle';c.font='400 22px Outfit,sans-serif';
+ DOW.forEach((d,i)=>c.fillText(d.toUpperCase(),M+i*cw+cw/2,TH+HH/2+1));
+
+ const wrap=(t,maxW)=>{const out=[];let cur='';for(const w of t.split(' ')){const tt=cur?cur+' '+w:w;if(c.measureText(tt).width>maxW&&cur){out.push(cur);cur=w}else cur=tt}if(cur)out.push(cur);return out};
+ for(let d=1;d<=n;d++){
+  const idx=first+d-1,x0=M+(idx%7)*cw,y0=TH+HH+Math.floor(idx/7)*CH;
+  const o=mo[d]||{p:{}},hol=!!o.h,ps=S.emps.filter(e=>o.p&&o.p[e.id]);
+  if(hol){c.fillStyle='#fdeeee';c.fillRect(x0+2,y0+2,cw-4,CH-4)}
+  c.textAlign='left';c.textBaseline='top';c.fillStyle=hol?RED:INK;c.font=`${hol?600:400} 20px ${OS}`;
+  c.fillText(String(d),x0+10,y0+12);
+  const build=s=>{
+   const L=[];if(hol)L.push({t:'FERIADO',sz:26*s,col:RED,pill:true});
+   ps.forEach(e=>{
+    const p=o.p[e.id],l=lab(p),off=isOff(p.k);
+    const col=off?RED:(hol?RED:INK);
+    L.push({t:e.name.toUpperCase(),sz:(off?24:28)*s,col});
+    if(l){c.font=`400 ${20*s}px ${OS}`;wrap('('+l+')',cw-24).forEach(t=>L.push({t,sz:20*s,col:off?col:INK}))}
+   });
+   return L;
+  };
+  let s=1,L=build(1);
+  const tot=L2=>L2.reduce((a,l)=>a+l.sz*1.32,0);
+  while(tot(L)>CH-56&&s>.55){s-=.08;L=build(s)}
+  let y=y0+44+Math.max(0,(CH-44-14-tot(L))/2);
+  c.textAlign='center';
+  L.forEach(l=>{
+   if(l.pill){
+    const f=l.sz*.78;c.font=`600 ${f}px ${OS}`;
+    const pw=c.measureText('FERIADO').width+f*1.6,ph=f*1.5,px=x0+cw/2-pw/2,r=ph/2;
+    c.fillStyle=RED;c.beginPath();c.moveTo(px+r,y);c.arcTo(px+pw,y,px+pw,y+ph,r);c.arcTo(px+pw,y+ph,px,y+ph,r);c.arcTo(px,y+ph,px,y,r);c.arcTo(px,y,px+pw,y,r);c.closePath();c.fill();
+    c.fillStyle='#fff';c.textBaseline='middle';c.fillText('FERIADO',x0+cw/2,y+ph/2+1);c.textBaseline='top';
+    y+=l.sz*1.32;return;
+   }
+   let sz=l.sz;c.font=`400 ${sz}px ${OS}`;
+   while(c.measureText(l.t).width>cw-16&&sz>12){sz--;c.font=`400 ${sz}px ${OS}`}
+   c.fillStyle=l.col;c.fillText(l.t,x0+cw/2,y);y+=l.sz*1.32;
+  });
+ }
+ return cv;
+}
+const blobPng=async()=>{const cv=await makeCanvas();return new Promise(r=>cv.toBlob(r,'image/png'))};
+$('#png').onclick=async()=>{
+ const b=await blobPng(),a=document.createElement('a');
+ a.href=URL.createObjectURL(b);a.download=`escala-${ym()}.png`;a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+};
+if(navigator.share&&navigator.canShare)$('#share').hidden=false;
+$('#share').onclick=async()=>{
+ const b=await blobPng(),f=new File([b],`escala-${ym()}.png`,{type:'image/png'});
+ try{await navigator.share({files:[f],title:'Escala de trabalho'})}catch(e){}
+};
+render();
+</script>
+</body>
+</html>
